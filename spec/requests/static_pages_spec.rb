@@ -26,11 +26,11 @@ describe "Static pages" do
   describe "About page" do
     before { visit about_path }
 
-    it { should have_content('About Us') }
+    it { should have_content('About Me') }
 
     it {should have_title(full_title('')) }
 
-    it { should have_title('About Us | ')}
+    it { should have_title('About | ')}
   end
 
   describe "Contact page" do

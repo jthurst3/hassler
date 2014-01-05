@@ -7,20 +7,19 @@ Hassler::Application.routes.draw do
   # root 'welcome#index'
 
   # first REST resource
-  Hassler::Application.routes.draw do
-    root 'static_pages#home'
+  root 'static_pages#home'
   match '/home',    to: 'static_pages#home',    via: 'get'
   match '/help',    to: 'static_pages#help',    via: 'get'
   match '/about',   to: 'static_pages#about',   via: 'get'
   match '/contact', to: 'static_pages#contact', via: 'get'
   match '/acknowledgements', to: 'static_pages#acknowledgements', via: 'get'
-  match '/projects',to: 'static_pages#projects',via: 'get'
   match '/cv',      to: 'static_pages#cv',      via: 'get'
   match '/resume',  to: 'static_pages#resume',  via: 'get'
+  match '/projects',to: 'projects#index',       via: 'get'
 
-    resources :posts
-    # root to: "welcome#index"
-  end
+  resources :posts
+
+  # root to: "welcome#index"
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
