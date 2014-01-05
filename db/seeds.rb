@@ -5,3 +5,26 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+Project.create([
+	{
+		name:'The Unsolved Problems Database', 
+		url:'http://unsolveddatabase.org', 
+		description:'A website where people can learn about unsolved problems and discuss potential routes to their solutions.',
+		file:'unsolved_photo.jpg'
+	},{
+		name:'Connect Four',
+		url:'/connectfour',
+		description:'An interactive application that plays Connect Four; will soon independently verify the outcome of the game with perfect play',
+		file:'connect_four.jpg'
+	},{
+		name:'Human-Aided Computer Composition (HACC)',
+		url:'/hacc',
+		description:'A computer program that composes music given human input',
+		file:'hacc.jpg'
+	},{
+		name:'Automata Game',
+		url:'/automata',
+		description:'A fun game I created while studying cellular automata in Coursera\'s Model Thinking class',
+		file:'automata_game.jpg'
+	}])

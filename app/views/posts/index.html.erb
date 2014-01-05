@@ -1,12 +1,10 @@
 <h1>Blog</h1>
 
-<%= link_to "New post", new_post_path %>
-  
-  <hr>
-
- 
-  <% @posts.each do |post| %>
-    <%= post.title %><br>
-    <%= post.text %>
-    <hr>
-  <% end %>
+	<div class="row-fluid">
+    	<div class="col-md-6 col-md-offset-3">
+			<% @posts.each do |post| %>
+				<h3><a href="/blog/<%= post.id %>"><%= post.title %></a></h3><br>
+				<%= post.text %><hr>
+  			<% end %>
+    	</div>
+    </div>

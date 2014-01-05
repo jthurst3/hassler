@@ -15,9 +15,17 @@ Hassler::Application.routes.draw do
   match '/acknowledgements', to: 'static_pages#acknowledgements', via: 'get'
   match '/cv',      to: 'static_pages#cv',      via: 'get'
   match '/resume',  to: 'static_pages#resume',  via: 'get'
-  match '/projects',to: 'projects#index',       via: 'get'
 
-  resources :posts
+  # projects
+  # match '/projects',to: 'projects#index',       via: 'get'
+  # match '/projects/:id',to: 'projects#show',       via: 'get'
+
+  # blog
+  match '/blog',    to: 'posts#index',          via: 'get'
+  match '/blog/:id',to: 'posts#show',           via: 'get'
+
+  resources :projects
+  # resources :projects
 
   # root to: "welcome#index"
 
