@@ -17,14 +17,15 @@ Hassler::Application.routes.draw do
   match '/resume',  to: 'static_pages#resume',  via: 'get'
 
   # projects
-  # match '/projects',to: 'projects#index',       via: 'get'
-  # match '/projects/:id',to: 'projects#show',       via: 'get'
+  match '/projects',to: 'projects#index',       via: 'get'
+  match '/connectfour', to: 'projects#connectfour', via: 'get'
+  match '/hacc',    to: 'projects#hacc',        via: 'get'
+  match '/automata',to: 'projects#automata',    via: 'get'
 
   # blog
-  match '/blog',    to: 'posts#index',          via: 'get'
-  match '/blog/:id',to: 'posts#show',           via: 'get'
+  # match '/blog',    to: 'posts#index',          via: 'get'
+  # match '/blog/:id',to: 'posts#show',           via: 'get'
 
-  resources :projects
   # resources :projects
 
   # root to: "welcome#index"

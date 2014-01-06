@@ -16,15 +16,15 @@ Project.create([
 		name:'Connect Four',
 		url:'/connectfour',
 		description:'An interactive application that plays Connect Four; will soon independently verify the outcome of the game with perfect play',
-		file:'connect_four.jpg'
+		file:'connect_four.png'
 	},{
 		name:'Human-Aided Computer Composition (HACC)',
 		url:'/hacc',
 		description:'A computer program that composes music given human input',
-		file:'hacc.jpg'
+		file:'hacc_providence.png'
 	},{
 		name:'Automata Game',
 		url:'/automata',
 		description:'A fun game I created while studying cellular automata in Coursera\'s Model Thinking class',
-		file:'automata_game.jpg'
+		file:'automata_game.png'
 	}])

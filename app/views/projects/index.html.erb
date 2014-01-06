@@ -2,15 +2,13 @@
 
     <h1>Projects</h1>
     <div class="row-fluid">
-    	<div class="col-md-6 col-md-offset-3">
 			<% @projects.each do |project| %>
-				<div class="col-md-3">
-					<p>Picture</p>
+				<div class="col-md-3 col-md-offset-3">
+					<p><%= image_tag project.file, height:"150", width:"200" %></p>
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-4">
 					<h3><a href="<%= project.url %>"><%= project.name %></a></h3><br>
 					<%= project.description %><hr>
 				</div>
 			<% end %>
-    	</div>
     </div>
