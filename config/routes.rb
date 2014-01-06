@@ -1,5 +1,5 @@
 Hassler::Application.routes.draw do
-  get "welcome/index"
+  # get "welcome/index"
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -13,8 +13,8 @@ Hassler::Application.routes.draw do
   match '/about',   to: 'static_pages#about',   via: 'get'
   match '/contact', to: 'static_pages#contact', via: 'get'
   match '/acknowledgements', to: 'static_pages#acknowledgements', via: 'get'
-  match '/cv',      to: 'static_pages#cv',      via: 'get'
-  match '/resume',  to: 'static_pages#resume',  via: 'get'
+  # match '/cv',      to: 'static_pages#cv',      via: 'get'
+  # match '/resume',  to: 'static_pages#resume',  via: 'get'
 
   # projects
   match '/projects',to: 'projects#index',       via: 'get'
