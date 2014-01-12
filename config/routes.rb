@@ -21,7 +21,6 @@ Hassler::Application.routes.draw do
   match '/connectfour', to: 'projects#connectfour', via: 'get'
   match '/hacc',    to: 'projects#hacc',        via: 'get'
   match '/automata',to: 'projects#automata',    via: 'get'
-
   # blog
   # match '/blog',    to: 'posts#index',          via: 'get'
   # match '/blog/:id',to: 'posts#show',           via: 'get'
