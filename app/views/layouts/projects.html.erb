@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= full_title(yield(:title)) %></title>
+  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+ <!-- midi.js package -->
+ <% javascript_include_tag "midijs/Color/SpaceW3.js" %>
+ <% javascript_include_tag "midijs/MIDI/AudioDetect.js" %>
+ <% javascript_include_tag "midijs/MIDI/LoadPlugin.js" %>
+ <% javascript_include_tag "midijs/MIDI/Plugin.js" %>
+ <% javascript_include_tag "midijs/MIDI/Player.js" %>
+ <% javascript_include_tag "midijs/MusicTheory/Synesthesia.js" %>
+ <% javascript_include_tag "midijs/Widgets/Loader.js" %>
+ <% javascript_include_tag "midijs/Window/Event.js" %>
+ <% javascript_include_tag "midijs/Window/DOMLoader.XMLHttp.js" %>
+ <% javascript_include_tag "midijs/Window/DOMLoader.script.js" %>
+ <!-- jasmid package -->
+ <% javascript_include_tag "inc/jasmid/stream.js" %>
+ <% javascript_include_tag "inc/jasmid/midifile.js" %>
+ <% javascript_include_tag "inc/jasmid/replayer.js" %>
+ <!-- extras -->
+ <% javascript_include_tag "inc/Base64.js" %>
+ <% javascript_include_tag "inc/base64binary.js" %>
+
+  <%= csrf_meta_tags %>
+  <%= render 'layouts/shim' %>
+</head>
+<body>
+	<%= render 'layouts/navbar' %>
+	<div class="container">
+		<%= yield %>
+	</div>
+	<div class="container">
+		<%= render 'layouts/footer' %>
+	</div>
+
+</body>
+</html>
