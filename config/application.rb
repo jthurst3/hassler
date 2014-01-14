@@ -21,6 +21,6 @@ module Hassler
     # config.i18n.default_locale = :de
 
     # asset pipeline compatibility
-    config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
+    config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif *.css *.js)
   end
 end
