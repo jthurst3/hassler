@@ -139,7 +139,7 @@
 			'moves': moves
 		};
 		var xmlHTTP = new XMLHttpRequest();
-		xmlHTTP.open("POST", "http://localhost:5000/move", false);
+		xmlHTTP.open("POST", "http://hassler-connectfour.herokuapp.com/move", false);
 		xmlHTTP.setRequestHeader('Content-Type', 'application/json');
 		xmlHTTP.send(JSON.stringify(data));
 
