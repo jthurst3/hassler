@@ -22,6 +22,5 @@ module Hassler
 
     # asset pipeline compatibility
     config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
-    config.assets.precompile += ['connectfour.css', 'game.js']
   end
 end
