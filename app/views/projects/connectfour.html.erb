@@ -9,8 +9,10 @@
     	<div class="col-md-8 col-md-offset-2">
     		<section id="game">
     			<input type="hidden" id="newgame_moves" value="[]">
-    			Columns: <input id="newgame_columns" placeholder="7">&nbsp;
-    			Rows: <input id="newgame_rows" placeholder="6">&nbsp;
+    			Columns: <input id="newgame_columns" placeholder="7"><br>
+    			Rows: <input id="newgame_rows" placeholder="6"><br>
+    			Turn: <input type="radio" name="newgame_turn" value="1">First &nbsp;
+    			<input type="radio" name="newgame_turn" value="2">Second<br>
     			<button id="newgame_button" class="btn btn-primary">New game</button>
     		</section>
     		<hr>
@@ -25,7 +27,7 @@
     	start_game();
     })
     // initializes the game board
-    function create_game(columns, rows) {
+    function create_game(columns, rows, turn) {
     	// inspired by http://www.youtube.com/watch?v=qaGd65opzgo
     	// and (modified from) http://jsfiddle.net/pendensproditor/9zA6g/
 
@@ -70,6 +72,11 @@
 
 		// initialize the global variables
 		initializeVars(columns, rows);
+
+		// if the computer goes first, get its move
+		if(computer_player == 1) {
+			send_move();
+		}
 	};
 
 	// relevant global variables
@@ -84,8 +91,8 @@
 		for(var i = 0; i < col; i++) {
 			board.push([]);
 		}
-		human_player = 1;
-		computer_player = 2;
+		human_player = turn;
+		computer_player = (turn%2)+1;
 		game_turn = 1;
 	}
 
@@ -120,7 +127,10 @@
 	}
 	// paints the relevant cell
 	var paint = function(strID, player) {
-		$("td#" + strID).addClass("player" + String(player));
+		if(player == human_player)
+			$("td#" + strID).addClass("humanplayer");
+		else
+			$("td#" + strID).addClass("computerplayer");
 	}
 	// updates the player whose turn it is
 	var update_turn = function() {
@@ -195,7 +205,7 @@
 	// sets up the board for a new game
 	var start_game = function() {
 		// taken from the top of the page
-		var html_string = "<input type=\"hidden\" id=\"newgame_moves\" value=\"[]\">Columns: <input id=\"newgame_columns\" placeholder=\"7\">&nbsp;Rows: <input id=\"newgame_rows\" placeholder=\"6\">&nbsp;<button id=\"newgame_button\" class=\"btn btn-primary\">New game</button>";
+		var html_string = "<input type=\"hidden\" id=\"newgame_moves\" value=\"[]\">Columns: <input id=\"newgame_columns\" placeholder=\"7\"><br>Rows: <input id=\"newgame_rows\" placeholder=\"6\"><br>Turn: <input type=\"radio\" name=\"newgame_turn\" value=\"1\">First &nbsp;<input type=\"radio\" name=\"newgame_turn\" value=\"2\">Second<br><button id=\"newgame_button\" class=\"btn btn-primary\">New game</button>";
     	$("section#game").html(html_string);
 	}
     </script>
