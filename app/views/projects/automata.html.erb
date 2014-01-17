@@ -1,9 +1,28 @@
 <% provide(:title, 'Automata Game') %>
+<% content_for :head do %>
+	<%= stylesheet_link_tag "automata", "data-turbolinks-track" => true %>
+	<%= javascript_include_tag "automata/functions", "data-turbolinks-track" => true %>
+	<%= javascript_include_tag "automata/game", "data-turbolinks-track" => true %>
+<% end %>
 
 	<h1>Automata Game</h1>
 	<div class="row-fluid">
-    	<div class="col-md-4 col-md-offset-4">
-    		Interactive application coming soon.<br>
-    		In the mean time, check out the project's <a href="http://github.com/jthurst3/automata_game">GitHub</a> site.
+    	<div class="col-md-8 col-md-offset-2">
+    		<section id="game">
+    			<input type="hidden" id="newgame_moves" value="[]">
+    			Columns: <input id="newgame_columns" placeholder="7"><br>
+    			Rows: <input id="newgame_rows" placeholder="6"><br>
+    			Turn: <input type="radio" name="newgame_turn" value="1">First &nbsp;
+    			<input type="radio" name="newgame_turn" value="2">Second<br>
+    			<button id="newgame_button" class="btn btn-primary">New game</button>
+    		</section>
+    		<hr>
+    		<p style="text-align: center">To access the source code, check out the project's <a href="http://github.com/jthurst3/automata_game">GitHub</a> site.</p>
     	</div>
     </div>
+
+    <script type="text/javascript">
+    $(document).on('click', "#newgame_button", function() {
+    	return validate_create();
+    });
+    </script>

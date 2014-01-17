@@ -1,0 +1,3 @@
+[submodule "app/assets/javascripts/automata"]
+	path = app/assets/javascripts/automata
+	url = https://github.com/jthurst3/automata.git
