@@ -1,0 +1,1 @@
+table{align:center}#game{margin:0 auto;width:400px}th,td{width:50px;height:50px;position:relative;text-align:center;border:2px solid black}th{background-color:blue;cursor:pointer;color:white;font-size:24px}.humanplayer{background-color:green}.computerplayer{background-color:red}
