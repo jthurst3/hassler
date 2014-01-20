@@ -1,28 +1,401 @@
 <% provide(:title, 'Automata Game') %>
 <% content_for :head do %>
 	<%= stylesheet_link_tag "automata", "data-turbolinks-track" => true %>
-	<%= javascript_include_tag "automata/functions", "data-turbolinks-track" => true %>
-	<%= javascript_include_tag "automata/game", "data-turbolinks-track" => true %>
+	<%= javascript_include_tag "automata/functions.js", "data-turbolinks-track" => true %>
+	<%= javascript_include_tag "automata/game.js", "data-turbolinks-track" => true %>
 <% end %>
 
 	<h1>Automata Game</h1>
 	<div class="row-fluid">
-    	<div class="col-md-8 col-md-offset-2">
     		<section id="game">
-    			<input type="hidden" id="newgame_moves" value="[]">
-    			Columns: <input id="newgame_columns" placeholder="7"><br>
-    			Rows: <input id="newgame_rows" placeholder="6"><br>
-    			Turn: <input type="radio" name="newgame_turn" value="1">First &nbsp;
-    			<input type="radio" name="newgame_turn" value="2">Second<br>
-    			<button id="newgame_button" class="btn btn-primary">New game</button>
+                <div class="col-md-9">
+        			Columns: <input id="newgame_columns" placeholder="20"><br>
+        			Rows: <input id="newgame_rows" placeholder="20"><br>
+        			Turn: <input type="radio" name="newgame_turn" value="0">First &nbsp;
+        			<input type="radio" name="newgame_turn" value="1">Second<br>
+        			<button id="newgame_button" class="btn btn-primary">New game</button>
+                </div>
     		</section>
-    		<hr>
+            <hr>
     		<p style="text-align: center">To access the source code, check out the project's <a href="http://github.com/jthurst3/automata_game">GitHub</a> site.</p>
-    	</div>
     </div>
 
     <script type="text/javascript">
     $(document).on('click', "#newgame_button", function() {
     	return validate_create();
     });
+    $(document).on('click', "#restart_button", function() {
+        start_game();
+    });
+    $(document).on('click', "#reveal_button", function() {
+        if(turn == human_player) {
+            compute_turn("reveal");
+            computer_make_move();
+        } else {
+            alert("It's not your turn.");
+        }
+    });
+    $(document).on('click', "#rule_button", function() {
+        if(turn == human_player) {
+            if(clickable_rules) {
+                // prompt the user to change a rule
+                alert("Please click on one rule at the right that you want to change.");
+            } else if(reveal[human_player] == 0) {
+                alert("You must reveal a row this turn.");
+            } else {
+                alert("You are not allowed to change a rule at this time.")
+            }
+        } else {
+            alert("It's not your turn.");
+        }
+    });
+    $(document).on('click', "#square_button", function() {
+        if(turn == human_player) {
+            if(clickable_squares) {
+                if(square_queue.length == 0) {
+                    alert("Please click on up to 5 squares that you want to change.");
+                } else if(square_queue.length > 5) {
+                    alert("You have selected more than 5 squares to change.");
+                } else {
+                    compute_turn("squares", square_queue);
+                    computer_make_move();
+                }
+            } else if(reveal[human_player] == 0) {
+                alert("You must reveal a row this turn.");
+            } else {
+                alert("You are not allowed to change squares at this time.");
+            }
+        } else {
+            alert("It's not your turn.");
+        }
+    });
+    $(document).on('click', ".rule", function() {
+        if(clickable_rules) {
+            // get the number of the rule to change
+            var elemID = parseInt($(this).attr("id"));
+            if(invalid_rule != elemID) {
+                // change that rule
+                compute_turn("rule", elemID);
+                computer_make_move();
+            } else {
+                alert("The computer just changed that rule last turn. You are not allowed to change this rule right now.");
+            }
+        }
+    });
+    $(document).on('click', ".square", function() {
+        var elemID = $(this).attr("id");
+        var elID0 = parseInt(elemID.split("-")[0]);
+        var elID1 = parseInt(elemID.split("-")[1]);
+        if(elID0 == row) {
+            if(clickable_squares) {
+                if(invalid_squares.indexOf(elID1) == -1) {
+                    // get the player who owns the square
+                    var player_number = (current_row[elID1]+1);
+                    if(square_queue.indexOf(elID1) == -1) {
+                        // change that square
+                        $(this).removeClass("player"+player_number).addClass("changefromplayer"+player_number);
+                        // add the square to the queue
+                        square_queue.push(elID1);
+                    } else {
+                        // change that square back
+                        $(this).removeClass("changefromplayer"+player_number).addClass("player"+player_number);
+                        // remove it from the queue
+                        square_queue.splice(square_queue.indexOf(elID1), 1);
+                    }
+                } else {
+                    alert("The computer just changed that square last turn. You are not allowed to change this square right now.");
+                }
+                
+            }
+        }
+    });
+
+    function create_game(columns, rows, tn) {
+        // initialize the global variables
+        initialize_vars(rows, columns, tn);
+
+        // initialize string of HTML to replace
+        var board_string = "";
+        var score_string = get_score_string();
+        var turn_string = get_turn_string();
+        var board_header = "<table id=\"game_board\">\n";
+        var board_footer = "</table>\n";
+        var header_header = "<thead>";
+        var header_footer = "</thead>";
+        var body_header = "<tbody>";
+        var body_footer = "</tbody>";
+        var row_header = "<tr>";
+        var row_footer = "</tr>";
+        var restart_html = "<button id=\"restart_button\" class=\"btn btn-primary\">Start new game</button>";
+        // table headers
+        var header_element = function(column) {
+            return "<th data-col=\"" + column + "\" class=\"table_header\" id=\"" + column + "\">&darr;</th>";
+        }
+        // elements
+        var table_element = function(column, row) {
+            return "<td id=\"" + (rows-row-1) + "-" + column + "\" class=\"player0 square\"></td>\n";
+        }
+        // set up the header
+        board_string += "<div class=\"col-md-4\">\n";
+        board_string += ("<h3 id=\"score_header\">"+score_string+"</h3>\n");
+        board_string += "</div>\n";
+        board_string += "<div class=\"col-md-6 col-md-offset-2\">\n";
+        board_string += ("<h3 id=\"turn_header\">"+turn_string+"</h3>\n");
+        board_string += "</div>\n";
+        // set up the div
+        board_string += "<div class=\"col-md-9\">\n";
+        // set up table header
+        board_string += "<h4>Game Board (You are the " + human_color + " pieces)</h4>\n"+(board_header);
+        // set up table body
+        board_string += (body_header);
+        for(var i = 0; i < rows; i++) {
+            var row = "";
+            row += row_header;
+            for(var j = 0; j < columns; j++) {
+                row += table_element(j, rows-i-1);
+            }
+            row += row_footer;
+            board_string += row;
+        }
+        board_string += board_footer;
+        // set up automata rules
+        board_string += "</div>\n<div class=\"col-md-3\">\n<h4>Automata Rules</h4>\n";
+        for(var i = 0; i < 4; i++) {
+            board_string += "<p class=\"rule clickable\" id=\""+i+"\">Change Rule " + (i+1) + "</p>\n";
+            board_string += rule_element(i,rules[i]);
+            board_string += "<br>";
+        }
+        board_string += restart_html;
+        board_string += "</div>\n";
+        var txt = $("section#game").html(board_string);
+
+        // reveal the first row
+        show_next_row();
+        // make the first row's squares clickable if it's the human player's turn
+        make_squares_clickable();
+        // make the rules clickable, if it's the human player's turn
+        make_rules_clickable();
+
+        // have the computer make a move if it's the computer's turn
+        if(turn == computer_player) {
+            computer_make_move();
+        }
+    };
+
+    var prin = function() {
+        console.log(row, rows, columns, rules, score, rows_left, reveal, current_row, turn, human_player, computer_player, clickable_rules, clickable_squares);
+    };
+
+    // sets up the board for a new game
+    var start_game = function() {
+        // taken from the top of the page
+        var html_string = "<div class=\"col-md-9\">Columns: <input id=\"newgame_columns\" placeholder=\"20\"><br>Rows: <input id=\"newgame_rows\" placeholder=\"20\"><br>Turn: <input type=\"radio\" name=\"newgame_turn\" value=\"0\">First &nbsp;<input type=\"radio\" name=\"newgame_turn\" value=\"1\">Second<br><button id=\"newgame_button\" class=\"btn btn-primary\">New game</button></div>";
+        $("section#game").html(html_string);
+    };
+
+    // get the score
+    var get_score_string = function() {
+        var initial_string = "Score: "; //+ player_box("player1");
+        var middle_string = score[0] + "-" + score[1];
+        var final_string = " ";
+        if(human_player == 0) {
+            initial_string += "You ";
+            final_string += " Computer";
+        } else {
+            initial_string += "Computer ";
+            final_string += " You";
+        }
+        // final_string += " (Black)";
+        // final_string += player_box("player2");
+        return initial_string + middle_string + final_string;
+    };
+    // return a string that allows the user to make a move (the "turn" string)
+    var get_turn_string = function() {
+        var initial_string = "Must reveal in: "+reveal[human_player]+"\n";
+        var reveal_string = "<button id=\"reveal_button\" class=\"btn\">Reveal row</button>\n";
+        var rule_string = "<button id=\"rule_button\" class=\"btn\">Change rule</button>\n";
+        var square_string = "<button id=\"square_button\" class=\"btn\">Change squares</button>\n";
+        return (initial_string+reveal_string+rule_string+square_string);
+    };
+
+    // update the score header
+    var update_score_header = function() {
+        var sstring = get_score_string();
+        // change the header string
+        $("h3#score_header").html(sstring);
+    };
+    // update the turn header
+    var update_turn_header = function() {
+        var tstring = get_turn_string();
+        // change the header string
+        $("h3#turn_header").html(tstring);
+    };
+
+    // paints the next row
+    var show_next_row = function() {
+        // make the previous row not clickable
+        if(row > 0) {
+            for(var j = 0; j < columns; j++) {
+                var elem = $("td#"+((row-1)+"-"+j));
+                if(elem.hasClass("clickable"))
+                    elem.removeClass("clickable");
+            }
+        }
+        // change the attributes of the current row
+        var rowID = (row+"-");
+        for(var i = 0; i < columns; i++) {
+            var color = "player"+(current_row[i]+1);
+            var elem = $("td#"+(rowID+i));
+            elem.removeClass("player0").addClass(color);
+        }
+    };
+
+    // rule elements
+    var rule_element = function(number, value) {
+        var row_header = "<tr>";
+        var row_footer = "</tr>";
+        var board_footer = "</table>\n";
+        var tab = "<table>\n";
+        var to_color = function(num) {
+            if(num == 0)
+                return "white";
+            else return "black";
+        };
+        var bod0 = "<td class=\"player" + (Math.floor(number/2)+1) + "\"></td>";
+        var bod1 = "<td class=\"player" + (number%2+1) + "\"></td>";
+        var val = "<td id=\"rule_"+number+"\" class=\"player" + (value+1) + "\"></td>";
+        return tab+(row_header+bod0+bod1+row_footer)+(row_header+val+row_footer)+board_footer;
+    };
+
+    // paints square changes
+    var update_squares = function() {
+        var rowID = (row+"-");
+        // loops through the current row, and changes the "changefromplayer" classes to the real classes
+        for(var i = 0; i < columns; i++) {
+            var elem = $("td#"+(rowID+i));
+            var player_class = current_row[i]+1;
+            elem.removeClass("changefromplayer1").removeClass("changefromplayer2")
+            elem.removeClass("player1").removeClass("player2").addClass("player"+player_class);
+        }
+    };
+    // paints rule changes
+    var update_rules = function() {
+        for(var i = 0; i < 4; i++) {
+            show_rule_change(i);
+        }
+    };
+    // paints a rule change
+    var show_rule_change = function(rule_number) {
+        var elem = $("td#rule_"+rule_number);
+        var new_number = rules[rule_number];
+        elem.removeClass("player"+(opposite(new_number)+1)).addClass("player"+(new_number+1));
+    };
+
+    // makes the squares in the current row clickable or not, depending on the clickable_squares parameter
+    var make_squares_clickable = function() {
+        for(var i = 0; i < columns; i++) {
+            make_square_clickable(i);
+        }
+    };
+    // makes a certain square clickable if appropriate
+    var make_square_clickable = function(square) {
+        var clickable = clickable_squares && invalid_squares.indexOf(square) == -1;
+        var elem = $("td#"+(row+"-"+square));
+        if(clickable) {
+            elem.addClass("clickable");
+        } else {
+            elem.removeClass("clickable");
+        }
+    };
+
+    // makes the rules clickable or not, depending on the clickable_rules parameter
+    var make_rules_clickable = function() {
+        for(var i = 0; i < 4; i++) {
+            make_rule_clickable(i);
+        }
+    };
+    // makes a certain rule clickable if appropriate
+    var make_rule_clickable = function(rule) {
+        var clickable = clickable_rules && invalid_rule != rule;
+        var elem = $("p.rule#"+rule);
+        if(clickable) {
+            elem.addClass("clickable");
+        } else {
+            elem.removeClass("clickable");
+        }
+    };
+
+    // makes a move (computer player)
+    var computer_make_move = function() {
+        // don't move if the game is over.
+        if(game_over) {
+            console.log("The game is over.");
+            return false;
+        }
+        // get the rules owned by the human
+        var human_rules = [];
+        for(var i = 0; i < 4; i++) {
+            if(rules[i] == human_player && invalid_rule != i) {
+                human_rules.push(i);
+            }
+        };
+        // get the squares owned by the human
+        var human_squares = [];
+        for(var i = 0; i < columns; i++) {
+            if(current_row[i] == human_player && invalid_squares.indexOf(i) == -1) {
+                human_squares.push(i);
+            }
+        };
+        // check if we need to reveal a row
+        if(reveal[computer_player] == 0 || human_rules.length == 0 || human_squares.length == 0) {
+            compute_turn("reveal");
+            return true;
+        };
+        // otherwise, randomly select one available option
+        var option = Math.round(Math.random());
+        if(option == 0) {
+            // change some squares
+            // if there are <= 5 squares owned by the human, change all of them
+            if(human_squares.length <= 5) {
+                compute_turn("squares", human_squares);
+                return true;
+            }
+            // otherwise, randomly select up to five of them
+            var selected_squares = [];
+            var square_len = human_squares.length;
+            for(var i = 0; i < square_len - 5; i++) {
+                var random_index = Math.floor(Math.random()*(square_len-i));
+                selected_squares.push(human_squares[random_index]);
+                human_squares.splice(random_index, 1);
+            }
+            // and then change those 5
+            compute_turn("squares", human_squares);
+            return true;
+        } else {
+            // change a rule
+            // pick a rule randomly
+            var rule_to_change = Math.floor(Math.random()*(human_rules.length));
+            // change that rule
+            compute_turn("rule", rule_to_change);
+            return true;
+        }
+        alert("There was an error on our part. Sorry about that.");
+        start_game();
+        return false;
+    };
+
+    // returns a table cell (box) that's colored either white or black
+    var player_box = function(player_class) {
+        var initial_string = "<table class=\"scoretable\">";
+        var middle_string = "<td class=\""+player_class+"\"></td>";
+        var final_string = "</table>";
+        return initial_string+middle_string+final_string;
+    }
+    
     </script>
+
+
+
+
+
+
