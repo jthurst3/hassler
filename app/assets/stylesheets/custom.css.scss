@@ -2,6 +2,20 @@
 
 /* universal (from http://ruby.railstutorial.org/chapters/filling-in-the-layout#code-universal_css) */
 
+// from http://stackoverflow.com/questions/10568103/modify-twitter-bootstrap-navbar
+.navbar .nav,
+.navbar .nav > li {
+    float:none;
+    display:inline-block;
+    *display:inline; /* ie7 fix */
+    *zoom:1; /* hasLayout ie7 trigger */
+    vertical-align: top;
+}
+
+ .navbar-inner {
+    text-align:center;
+}
+
 html {
   overflow-y: scroll;
 }
