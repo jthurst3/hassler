@@ -1,3 +1,6 @@
 [submodule "app/assets/javascripts/automata"]
 	path = app/assets/javascripts/automata
 	url = https://github.com/jthurst3/automata.git
+[submodule "app/assets/javascripts/computermusic"]
+	path = app/assets/javascripts/computermusic
+	url = https://github.com/jthurst3/computermusic.git

@@ -1,9 +1,18 @@
 <% provide(:title, 'Human-Aided Computer Composition') %>
+<% content_for :head do %>
+	<%= stylesheet_link_tag "hacc", "data-turbolinks-track" => true %>
+	<%= javascript_include_tag "computermusic/fiddletune", "data-turbolinks-track" => true %>
+	<%= javascript_include_tag "computermusic/graph", "data-turbolinks-track" => true %>
+	<%= javascript_include_tag "computermusic/test", "data-turbolinks-track" => true %>
+<% end %>
 
 	<h1>Human-Aided Computer Composition</h1>
 	<div class="row-fluid">
-    	<div class="col-md-4 col-md-offset-4">
-    		Interactive application coming soon.<br>
-    		In the mean time, check out the project's <a href="http://github.com/jthurst3/computermusic">GitHub</a> site.
-    	</div>
+    		<section id="music">
+                <div class="col-md-6 col-md-offset-3">
+        			No content here yet.is this right?
+                </div>
+    		</section>
+            <hr>
+    		<p style="text-align: center">To access the source code, check out the project's <a href="http://github.com/jthurst3/computermusic">GitHub</a> site.</p>
     </div>
