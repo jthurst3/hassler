@@ -28,3 +28,10 @@ Project.create([
 		description:'A fun game I created while studying cellular automata in Coursera\'s Model Thinking class',
 		file:'automata_game.png'
 	}])
+
+Post.create([
+	{
+		title:'Why It\'s Best to Write Down Your Ideas',
+		text:''
+	}
+	])
