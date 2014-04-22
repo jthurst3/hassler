@@ -22,7 +22,9 @@ class PostsController < ApplicationController
 	def update
 		@post = Post.find(params[:id])
 		
-		if @post.update(params[:post].permit(:title, :text))
+		# from http://stackoverflow.com/questions/17713570/undefined-method-permit-for-nilnilclass-in-rails-guide-section-5-7
+		if params.has_key?(:post)
+			@post.update(params[:post].permit(:title, :text))
 			redirect_to @post
 		else
 			render 'edit'

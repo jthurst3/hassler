@@ -21,9 +21,24 @@ Hassler::Application.routes.draw do
   match '/connectfour', to: 'projects#connectfour', via: 'get'
   match '/hacc',    to: 'projects#hacc',        via: 'get'
   match '/automata',to: 'projects#automata',    via: 'get'
+  match '/cribbage',to: 'projects#cribbage',    via: 'get'
   # blog
-  match '/blog',    to: 'posts#index',          via: 'get'
-  match '/blog/:id',to: 'posts#show',           via: 'get'
+  # match '/blog',    to: 'posts#index',          via: 'get'
+  # match '/blog',    to: 'posts#create',         via: 'post'
+  # match '/blog/new',to: 'posts#new',            via: 'get'
+  # match '/blog/:id/edit',to:'posts#edit',       via: 'get'
+  # match '/blog/:id',to: 'posts#show',           via: 'get'
+  # match '/blog/:id',to: 'posts#destroy',        via: 'delete'
+
+  controller :posts do
+    get 'blog'     => :index
+    post 'blog/new' => :new
+    get 'blog/:id'      => :show, constraints: {
+      id: /\d/
+    }
+    delete 'blog/:id/delete'   => :destroy
+    get 'blog/:id/edit' => :edit
+  end
 
   # resources :projects
 

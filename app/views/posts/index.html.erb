@@ -6,5 +6,7 @@
 				<h3><a href="/blog/<%= post.id %>"><%= post.title %></a></h3><br>
 				<%= post.text %><hr>
   			<% end %>
+
+  			<%= link_to 'New', blog_new_path, method: 'post' %>
     	</div>
     </div>
