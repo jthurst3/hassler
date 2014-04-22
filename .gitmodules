@@ -4,3 +4,6 @@
 [submodule "app/assets/javascripts/computermusic"]
 	path = app/assets/javascripts/computermusic
 	url = https://github.com/jthurst3/computermusic.git
+[submodule "app/assets/javascripts/cribbage"]
+	path = app/assets/javascripts/cribbage
+	url = https://github.com/jthurst3/cribbage.git
