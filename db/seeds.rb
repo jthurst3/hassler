@@ -6,6 +6,8 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
+Project.destroy_all
+
 Project.create([
 	{
 		name:'The Unsolved Problems Database', 
@@ -14,24 +16,19 @@ Project.create([
 		file:'unsolved_photo.jpg'
 	},{
 		name:'Connect Four',
-		url:'/connectfour',
+		url:'connectfour',
 		description:'An interactive application that plays Connect Four; will soon independently verify the outcome of the game with perfect play',
 		file:'connect_four.png'
 	},{
 		name:'Human-Aided Computer Composition (HACC)',
-		url:'/hacc',
+		url:'hacc',
 		description:'A computer program that composes music given human input',
 		file:'hacc_providence.png'
 	},{
 		name:'Automata Game',
-		url:'/automata',
+		url:'automata',
 		description:'A fun game I created while studying cellular automata in Coursera\'s Model Thinking class',
 		file:'automata_game.png'
 	}])
 
-Post.create([
-	{
-		title:'Why It\'s Best to Write Down Your Ideas',
-		text:''
-	}
-	])
+

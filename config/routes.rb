@@ -17,11 +17,13 @@ Hassler::Application.routes.draw do
   # match '/resume',  to: 'static_pages#resume',  via: 'get'
 
   # projects
-  match '/projects',to: 'projects#index',       via: 'get'
-  match '/connectfour', to: 'projects#connectfour', via: 'get'
-  match '/hacc',    to: 'projects#hacc',        via: 'get'
-  match '/automata',to: 'projects#automata',    via: 'get'
-  match '/cribbage',to: 'projects#cribbage',    via: 'get'
+  match '/projects',to: 'projects#index', via: 'get'
+  match '/projects/:project',to:'projects#show', via: 'get'
+
+  
+  # match '/hacc',    to: 'projects#hacc',        via: 'get'
+  # match '/automata',to: 'projects#automata',    via: 'get'
+  # match '/cribbage',to: 'projects#cribbage',    via: 'get'
   # blog
   # match '/blog',    to: 'posts#index',          via: 'get'
   # match '/blog',    to: 'posts#create',         via: 'post'
@@ -30,17 +32,17 @@ Hassler::Application.routes.draw do
   # match '/blog/:id',to: 'posts#show',           via: 'get'
   # match '/blog/:id',to: 'posts#destroy',        via: 'delete'
 
-  controller :posts do
-    get 'blog'     => :index
-    post 'blog/new' => :new
-    get 'blog/:id'      => :show, constraints: {
-      id: /\d/
-    }
-    delete 'blog/:id/delete'   => :destroy
-    get 'blog/:id/edit' => :edit
-  end
+  # controller :posts do
+  #   get 'blog'     => :index
+  #   post 'blog/new' => :new
+  #   get 'blog/:id'      => :show, constraints: {
+  #     id: /\d/
+  #   }
+  #   delete 'blog/:id/delete'   => :destroy
+  #   get 'blog/:id/edit' => :edit
+  # end
 
-  # resources :projects
+  resources :posts
 
   # root to: "welcome#index"
 
@@ -92,4 +94,9 @@ Hassler::Application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+
+  # old routes
+  get '/connectfour' => redirect("/projects/connectfour")
+  get '/hacc' => redirect("/projects/hacc")
+  get '/automata' => redirect("/projects/automata")
 end

@@ -7,7 +7,7 @@
 					<p><%= image_tag project.file, height:"150", width:"200" %></p>
 				</div>
 				<div class="col-md-4">
-					<h3><a href="<%= project.url %>"><%= project.name %></a></h3><br>
+					<h3><%= link_to project.name, project.full_url %></h3><br>
 					<%= project.description %><hr>
 				</div>
 			<% end %>

@@ -1,4 +1,16 @@
 class PostsController < ApplicationController
+
+	before_filter :authenticate, except: [:show, :index]
+
+	def authenticate
+		if Rails.env == 'development'
+			return true
+		end
+		authenticate_or_request_with_http_basic do |username, pass|
+			username == ENV['hassler_blog_username'] and pass == ENV['hassler_blog_pass']
+		end
+	end
+
 	# create a new post
 	def new
 		@post = Post.new
