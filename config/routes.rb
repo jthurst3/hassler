@@ -33,13 +33,14 @@ Hassler::Application.routes.draw do
   # match '/blog/:id',to: 'posts#destroy',        via: 'delete'
 
   # controller :posts do
-  #   get 'blog'     => :index
-  #   post 'blog/new' => :new
-  #   get 'blog/:id'      => :show, constraints: {
-  #     id: /\d/
-  #   }
-  #   delete 'blog/:id/delete'   => :destroy
-  #   get 'blog/:id/edit' => :edit
+  #   get 'posts'     => :index
+  #   post 'posts'    => :create
+  #   get 'posts/new' => :new, as: 'new_post'
+  #   get 'posts/:url/edit' => :edit, as: 'edit_post'
+  #   get 'posts/:url'      => :show, as: 'post'
+  #   patch 'posts/:url' => :update
+  #   put 'posts/:url'   => :update
+  #   delete 'posts/:url/delete'   => :destroy
   # end
 
   resources :posts

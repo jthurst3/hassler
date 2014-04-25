@@ -16,7 +16,7 @@ class PostsController < ApplicationController
 		@post = Post.new
 	end
 	def create
-		@post = Post.new(params[:post].permit(:title, :text))
+		@post = Post.new(params[:post].permit(:title, :text, :caption, :url, :file))
 		if @post.save
 			redirect_to @post
 		else
@@ -24,19 +24,22 @@ class PostsController < ApplicationController
 		end
 	end
 	def show
-		@post = Post.find(params[:id])
+		@post = Post.find_by_url(params[:id])
+		# @post = Post.find(params[:id])
 	end
 
 	# edit posts
 	def edit
-		@post = Post.find(params[:id])
+		@post = Post.find_by_url(params[:id])
+		# @post = Post.find(params[:id])
 	end
 	def update
-		@post = Post.find(params[:id])
+		@post = Post.find_by_url(params[:id])
+		# @post = Post.find(params[:id])
 		
 		# from http://stackoverflow.com/questions/17713570/undefined-method-permit-for-nilnilclass-in-rails-guide-section-5-7
 		if params.has_key?(:post)
-			@post.update(params[:post].permit(:title, :text))
+			@post.update(params[:post].permit(:title, :text, :caption, :url, :file))
 			redirect_to @post
 		else
 			render 'edit'
@@ -45,10 +48,11 @@ class PostsController < ApplicationController
 
 	# delete posts
 	def destroy
-		@post = Post.find(params[:id])
+		@post = Post.find_by_url(params[:id])
+		# @post = Post.find(params[:id])
 		@post.destroy
 
-		redirect_to blog_path
+		redirect_to posts_path
 	end
 
 	# index
@@ -58,6 +62,6 @@ class PostsController < ApplicationController
 
 	private
 	def post_params
-		params.require(:post).permit(:title, :text)
+		params.require(:post).permit(:title, :text, :caption, :url, :file)
 	end
 end

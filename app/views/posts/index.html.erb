@@ -1,12 +1,17 @@
+
+
+<% provide(:title, 'Blog') %>
+
 <h1>Blog</h1>
 
-	<div class="row-fluid">
-    	<div class="col-md-6 col-md-offset-3">
+    <div class="row-fluid">
 			<% @posts.each do |post| %>
-				<h3><a href="/blog/<%= post.id %>"><%= post.title %></a></h3><br>
-				<%= post.text %><hr>
-  			<% end %>
-
-  			<%= link_to 'New', new_post_path, method: 'get' %>
-    	</div>
+				<div class="col-md-3 col-md-offset-3">
+					<p><%= image_tag post.file, height:"150", width:"200" %></p>
+				</div>
+				<div class="col-md-4">
+					<h3><%= link_to post.title, post_path(post) %></h3><br>
+					<%= post.caption %><hr>
+				</div>
+			<% end %>
     </div>
