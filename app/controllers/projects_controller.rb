@@ -8,6 +8,6 @@ class ProjectsController < ApplicationController
 
 	def show
 		@project = Project.find_by!(url: params[:project])
-		render template: 'projects/' + @project.full_url
+		render template: 'projects/' + @project.url
 	end
 end
