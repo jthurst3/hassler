@@ -3,6 +3,6 @@ class Project < ActiveRecord::Base
 
 	def full_url
 		return url if url.start_with? 'http'
-		return "#{url}"
+		return "projects/#{url}"
 	end
 end
