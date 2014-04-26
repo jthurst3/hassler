@@ -1,5 +1,5 @@
 class AddImageCaptionToPosts < ActiveRecord::Migration
   def change
-    add_column :posts, :image_caption, :string
+    add_column :posts, :imgcaption, :string
   end
 end
