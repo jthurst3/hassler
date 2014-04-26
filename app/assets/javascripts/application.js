@@ -9,10 +9,6 @@
 //
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
-// 
-// Bower packages
-//= require d3/d3
-//= require underscore/underscore
 //
 //= require jquery
 //= require jquery_ujs
