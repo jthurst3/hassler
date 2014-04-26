@@ -21,7 +21,6 @@ ActiveRecord::Schema.define(version: 20140426023530) do
     t.text     "caption"
     t.string   "url"
     t.string   "file"
-    t.string   "image_caption", limit: nil
     t.string   "imgcaption"
   end
 
