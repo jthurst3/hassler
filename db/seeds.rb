@@ -29,7 +29,12 @@ Project.create([
 		url:'automata',
 		description:'A fun game I created while studying cellular automata in Coursera\'s Model Thinking class',
 		file:'automata_game.png'
-	}])
+	},{
+		name:'Automated Punditry',
+		url:'punditry',
+		description:'Generates new things Rush Limbaugh and Michael Bloomberg could say based on what they\'ve already said (with Dan Scarafoni)',
+		file:'http://i.imgur.com/3N24uPC.png'
+		}])
 
 
 

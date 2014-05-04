@@ -1,14 +1,22 @@
 <% provide(:title, 'Projects') %>
 
     <h1>Projects</h1>
-    <div class="row-fluid">
+    <br>
+    	<div class="container-fluid">
 			<% @projects.each do |project| %>
-				<div class="col-md-3 col-md-offset-3">
-					<p><%= image_tag project.file, height:"150", width:"200" %></p>
+				<div class="row">
+					<div class="col-md-3 col-md-offset-3">
+						<p><%= image_tag project.file, height:"150", width:"200" %></p>
+					</div>
+					<div class="col-md-4">
+						<h3><%= link_to project.name, project.full_url %></h3><br>
+						<%= project.description %>
+					</div>
 				</div>
-				<div class="col-md-4">
-					<h3><%= link_to project.name, project.full_url %></h3><br>
-					<%= project.description %><hr>
+				<div class="row">
+					<div class="col-md-5 col-md-offset-4">
+						<hr>
+					</div>
 				</div>
 			<% end %>
-    </div>
+		</div>

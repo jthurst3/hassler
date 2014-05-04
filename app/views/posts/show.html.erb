@@ -14,9 +14,9 @@
 		<%= image_tag @post.file, height:"300", width:"400" %>
 		<h6><%= @post.imgcaption %></h6>
 
-		<h4>
-		  <%= simple_format @post.caption %>
-		</h4>
+		<p>
+		  <b><%= simple_format @post.caption %></b>
+		</p>
 		 
 		<p>
 		  <%= simple_format @post.text %>
