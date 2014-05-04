@@ -7,3 +7,6 @@
 [submodule "app/assets/javascripts/cribbage"]
 	path = app/assets/javascripts/cribbage
 	url = https://github.com/jthurst3/cribbage.git
+[submodule "app/assets/javascripts/punditry"]
+	path = app/assets/javascripts/punditry
+	url = https://github.com/jthurst3/Auto_Pundit.git
