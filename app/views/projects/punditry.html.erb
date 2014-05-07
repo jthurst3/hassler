@@ -4,151 +4,101 @@
 <% end %>
 
 	<h1>Automated Punditry</h1>
+	<h3 id="result_text"></h3>
 	<div class="row-fluid">
     	<div class="col-md-8 col-md-offset-2">
     		<section id="game">
     			<input type="hidden" id="newgame_moves" value="[]">
-    			Columns: <input id="newgame_columns" placeholder="7"><br>
-    			Rows: <input id="newgame_rows" placeholder="6"><br>
-    			Turn: <input type="radio" name="newgame_turn" value="1">First &nbsp;
-    			<input type="radio" name="newgame_turn" value="2">Second<br>
-    			<button id="newgame_button" class="btn btn-primary">New game</button>
+    			Text: <input id="newquote_text" placeholder="I think Obama is"><br>
+    			n: <input id="newquote_n" placeholder="3"><br>
+    			Type: <input type="radio" name="newquote_type" value="1">Response &nbsp;
+    			<input type="radio" name="newquote_type" value="2">Complete the Sentence<br>
+    			Pundit: <input type="radio" name="newquote_pundit" value="1">Rush Limbot &nbsp;
+    			<input type="radio" name="newquote_pundit" value="2">Michael Bloombot<br>
+    			<button id="newquote_button" class="btn btn-primary">Generate</button>
     		</section>
     		<hr>
-    		<p style="text-align: center">To access the source code, check out the project's <a href="http://github.com/jthurst3/connectfour">GitHub</a> site.</p>
+    		<p style="text-align: center">To access the source code, check out the project's <a href="http://github.com/jthurst3/Auto_Pundit">GitHub</a> site.</p>
     	</div>
     </div>
     <script type="text/javascript">
-    $(document).on('click', "#newgame_button", function() {
-    	return validate_create();
+    $(document).on('click', "#newquote_button", function() {
+    	return validate_generate();
     });
-    $(document).on('click', "#restart_button", function() {
-    	start_game();
-    });
-    // initializes the game board
-    function create_game(columns, rows, turn) {
-    	// inspired by http://www.youtube.com/watch?v=qaGd65opzgo
-    	// and (modified from) http://jsfiddle.net/pendensproditor/9zA6g/
 
-    	// initialize string of HTML to replace
-    	var board_string = "";
-		var board_header = "<table id=\"game_board\">\n";
-		var board_footer = "</table>\n";
-		var header_header = "<thead>";
-		var header_footer = "</thead>";
-		var body_header = "<tbody>";
-		var body_footer = "</tbody>";
-		var row_header = "<tr>";
-		var row_footer = "</tr>";
-		var restart_html = "<button id=\"restart_button\" class=\"btn btn-primary\">Start new game</button>";
-		// table headers
-		var header_element = function(column) {
-			return "<th data-col=\"" + column + "\" class=\"table_header\" id=\"" + column + "\">&darr;</th>";
-		}
-		// elements
-		var table_element = function(column, row) {
-			return "<td id=\"" + column + "-" + row + "\"></td>\n";
-		}
-		// set up table header
-		board_string += (board_header + header_header + row_header);
-		for(var i = 0; i < columns; i++) {
-			board_string += header_element(i);
-		}
-		// set up table body
-		board_string += (row_footer + header_footer + body_header);
-		for(var i = 0; i < rows; i++) {
-			var row = "";
-			row += row_header;
-			for(var j = 0; j < columns; j++) {
-				row += table_element(j, rows-i-1);
+    // validates the input and generates a quote
+    function validate_generate() {
+		var prefix = "newquote_";
+		var text = document.getElementById(prefix + "text").value;
+		var n = document.getElementById(prefix + "n").value;
+		var type = document.getElementsByName(prefix + "type");
+		var pundit = document.getElementsByName(prefix + "pundit");
+		var isValidated = validateInput(text, n, type, pundit);
+		if(isValidated) {
+			// get the n in ngrams
+			var grams = parseInt(n);
+			// get the pundit
+			var pundit;
+			if(pundit[0].checked) {
+				pundit = "Limbaugh";
+			} else {
+				pundit = "Bloomberg";
 			}
-			row += row_footer;
-			board_string += row;
-		}
-		board_string += board_footer;
-		board_string += restart_html;
-		var txt = $("section#game").html(board_string);
-
-		// initialize the global variables
-		initializeVars(columns, rows);
-
-		// if the computer goes first, get its move
-		if(computer_player == 1) {
-			send_move();
+			// get the type  (if the input is validated, one radio button must be checked.)
+			if(type[0].checked) {
+				// it's a response
+				var responsetext = text.split(" ");
+				send_response(grams, pundit, responsetext);
+			} else {
+				// it's a "complete the sentence"
+				var starttext = text.split(" ");
+				send_finish_sentence(grams, pundit, starttext);
+			}
 		}
 	};
-
-	// relevant global variables
-	var columns, rows, moves, board, human_player, game_turn, computer_player;
-
-	// initializes global variables relevant to the Connect Four game
-	var initializeVars = function(col, row) {
-		columns = col;
-		rows = row;
-		moves = [];
-		board = [];
-		for(var i = 0; i < col; i++) {
-			board.push([]);
+	// validates the input
+	function validateInput(text, n, type, pundit) {
+		// check for blank inputs
+		var values = [text, n, type, pundit];
+		var valueNames = ["text", "the 'n' in n-grams", 
+			"whether the pundit should respond to a sentence or complete the sentence", "the pundit"];
+		for(var i = 0; i < values.length; i++) {
+			if(values[i] == null || values[i] == "") {
+				alert("Game must specify " + valueNames[i]);
+				return false;
+			}
 		}
-		human_player = turn;
-		computer_player = (turn%2)+1;
-		game_turn = 1;
-	}
-
-	// makes a move
-	$(document).on('click', "th.table_header", function() {
-		var column_number = parseInt($(this).attr("id"));
-		var legal = isLegal(column_number);
-		if(legal) {
-			board[column_number].push(human_player);
-			moves.push(column_number);
-			update_board(column_number);
-			update_turn();
-			send_move();
+		ngrams = parseInt(n);
+		words = text.split(" ");
+		if(ngrams < 1 || ngrams > 6) {
+			alert("n must be between 1 and 6.");
+			return false;
 		}
-	});
+		if(!type[0].checked && !type[1].checked) {
+			alert("Please pick whether the pundit should respond to a sentence or complete the sentence.");
+			return false;
+		}
+		if(!pundit[0].checked && !pundit[1].checked) {
+			alert("Please pick the pundit.");
+			return false;
+		}
+		return true;
+	};
+    
 
-	// updates the layout of the board given a legal move
-	var update_board = function(column_number) {
-		// get the ID of the cell we're updating
-		var coords = get_lastmove_id(column_number);
-		// paint that cell
-		paint(coords, game_turn);
-	}
-	// gets the ID of the cell to update
-	var get_lastmove_id = function(column_number) {
-		// get the row
-		var row = board[column_number].length - 1;
-		// construct the string ID
-		var strID = String(column_number) + "-" + String(row);
-		// return it
-		return strID;
-	}
-	// paints the relevant cell
-	var paint = function(strID, player) {
-		if(player == human_player)
-			$("td#" + strID).addClass("humanplayer");
-		else
-			$("td#" + strID).addClass("computerplayer");
-	}
-	// updates the player whose turn it is
-	var update_turn = function() {
-		if(game_turn == 1)
-			game_turn = 2;
-		else game_turn = 1;
-	}
+	
 
-	// sends the last move to the Connect Four server; retrieves the computer's move
-	var send_move = function() {
-		// from http://stackoverflow.com/questions/247483/http-get-request-in-javascript
-		// and http://stackoverflow.com/questions/6055714/how-to-send-json-object-or-string-data-from-javascript-xmlhttprequest-to-mvc-c
+
+	// sends the response to the server
+	var send_response = function(grams, pundit, responsetext) {
+		
 		var data = {
-			'columns': parseInt(columns),
-			'rows': parseInt(rows),
-			'moves': moves
+			'grams': grams,
+			'pundit': pundit,
+			'responsetext': responsetext
 		};
 		var xmlHTTP = new XMLHttpRequest();
-		xmlHTTP.open("POST", "http://hassler-connectfour.herokuapp.com/move", false);
+		xmlHTTP.open("POST", "http://punditry.herokuapp.com/respond_to_pundit", false);
 		xmlHTTP.setRequestHeader('Content-Type', 'application/json');
 		xmlHTTP.send(JSON.stringify(data));
 
@@ -156,56 +106,34 @@
 		var response = xmlHTTP.responseText;
 		// from http://stackoverflow.com/questions/9036429/convert-object-string-to-json
 		var json = eval('(' + response + ')');
-		if(json['moves'] == undefined) {
+		if(json['sentence'] == undefined) {
 			alert("There was an error processing your request.");
-			start_game();
-		} else if(json['winner'] != 0 && json['winner'] != computer_player && json['winner'] != -1) {
-			// print out a winning message and restart the game
-			var winning_message = get_winning_message(json['winner']);
-			alert(winning_message);
-			start_game();
 		} else {
-			var col_num = json['moves'][json['moves'].length-1];
-			board[col_num].push(computer_player);
-			moves.push(col_num);
-			update_board(col_num);
-			if(json['winner'] == computer_player || json['winner'] == -1) {
-				// print out a winning message and restart the game
-				var winning_message = get_winning_message(json['winner']);
-				alert(winning_message);
-				start_game();
-			}
-			update_turn();
+			$("h3#result_text").html(json['sentence']);
 		}
 	}
+	// sends the response to the server
+	var send_finish_sentence = function(grams, pundit, starttext) {
+		
+		var data = {
+			'grams': grams,
+			'pundit': pundit,
+			'starttext': starttext
+		};
+		var xmlHTTP = new XMLHttpRequest();
+		xmlHTTP.open("POST", "http://punditry.herokuapp.com/finish_sentence", false);
+		xmlHTTP.setRequestHeader('Content-Type', 'application/json');
+		xmlHTTP.send(JSON.stringify(data));
 
-	// checks to see if a move is legal, given the state of the board
-	var isLegal = function(column_number) {
-		// make sure the column number is valid
-		if(column_number < 0 || column_number >= columns) {
-			return false;
+		// receive the request and decode it
+		var response = xmlHTTP.responseText;
+		// from http://stackoverflow.com/questions/9036429/convert-object-string-to-json
+		var json = eval('(' + response + ')');
+		if(json['sentence'] == undefined) {
+			alert("There was an error processing your request.");
+		} else {
+			$("h3#result_text").html(json['sentence']);
 		}
-		// then check to see if that column is filled up
-		return board[column_number].length < rows;
-	}
-	// returns a string if somebody has won the game
-	var get_winning_message = function(player) {
-		if(player == -1)
-			return "Game is a draw. Can you do better?";
-		else if(player == 0)
-			return "Game is not over.";
-		else if(player == human_player)
-			return "You have just beaten my computer program! Congratulations!";
-		else if(player == computer_player)
-			return "You just lost to my computer program. You can do better than that.";
-		else return "There was an error processing your request.";
-	}
-
-	// sets up the board for a new game
-	var start_game = function() {
-		// taken from the top of the page
-		var html_string = "<input type=\"hidden\" id=\"newgame_moves\" value=\"[]\">Columns: <input id=\"newgame_columns\" placeholder=\"7\"><br>Rows: <input id=\"newgame_rows\" placeholder=\"6\"><br>Turn: <input type=\"radio\" name=\"newgame_turn\" value=\"1\">First &nbsp;<input type=\"radio\" name=\"newgame_turn\" value=\"2\">Second<br><button id=\"newgame_button\" class=\"btn btn-primary\">New game</button>";
-    	$("section#game").html(html_string);
 	}
     </script>
 
