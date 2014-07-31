@@ -10,3 +10,6 @@
 [submodule "app/assets/javascripts/punditry"]
 	path = app/assets/javascripts/punditry
 	url = https://github.com/jthurst3/Auto_Pundit.git
+[submodule "app/assets/javascripts/elections"]
+	path = app/assets/javascripts/elections
+	url = https://github.com/jthurst3/elections.git

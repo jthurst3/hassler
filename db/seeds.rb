@@ -34,7 +34,12 @@ Project.create([
 		url:'punditry',
 		description:'Generates new things Rush Limbaugh and Michael Bloomberg could say based on what they\'ve already said (with Dan Scarafoni)',
 		file:'http://i.imgur.com/3N24uPC.png'
-		}])
+	},{
+		name:'Elections',
+		url:'elections',
+		description:'Randomly generates a set of beliefs that a voter may have in regards to an upcoming US election',
+		file:'automata_game.png'
+	}])
 
 
 
