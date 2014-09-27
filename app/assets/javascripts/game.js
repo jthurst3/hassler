@@ -10,13 +10,13 @@ function validateGame(prefix) {
 	var values = [columns, rows, moves];
 	var valueNames = ["number of columns", "number of rows", "moves"];
 	for(var i = 0; i < values.length; i++) {
-		if(values[i] == null || values[i] == "") {
+		if(values[i] === null || values[i] === "") {
 			alert("Game must specify " + valueNames[i]);
 			return false;
 		}
 	}
-	columns = parseInt(columns);
-	rows = parseInt(rows);
+	columns = parseInt(columns, 10);
+	rows = parseInt(rows, 10);
 	if(columns < 4 || columns > 15) {
 		alert("Must have between 4 and 15 columns.");
 		return false;
