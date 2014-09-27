@@ -13,7 +13,7 @@ module Hassler
     # -- all .rb files in that directory are automatically loaded.
 
     # from http://work.stevegrossi.com/2013/02/21/remove-trailing-slashes-in-urls-with-rails/
-    config.middleware.insert_before(Rack::Lock, Rack::Rewrite) do
+    config.middleware.insert_before(Rack::Runtime, Rack::Rewrite) do
       r301 %r{^/(.*)/$}, '/$1'
     end
 
