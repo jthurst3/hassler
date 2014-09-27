@@ -1,12 +1,14 @@
 <% provide(:title, 'Automated Punditry') %>
 <% content_for :head do %>
-<!-- stylesheets and javascripts here -->
+	<!-- stylesheets and javascripts here -->
+	<%= stylesheet_link_tag "punditry", "data-turbolinks-track" => true %>
 <% end %>
 
 	<h1>Automated Punditry</h1>
-	<h3 id="result_text"></h3>
+	<h2>Making as much sense as the pundits themselves.</h2>
+	<h2 style="color: blue" id="result_text"></h3>
 	<div class="row-fluid">
-    	<div class="col-md-8 col-md-offset-2">
+    	<div class="col-md-12 center-block">
     		<section id="game">
     			<input type="hidden" id="newgame_moves" value="[]">
     			Text: <input id="newquote_text" placeholder="I think Obama is"><br>
@@ -109,7 +111,9 @@
 		if(json['sentence'] == undefined) {
 			alert("There was an error processing your request.");
 		} else {
-			$("h3#result_text").html(json['sentence']);
+			// change the text color of the div to correspond to the party of the pundit
+			$("h2#result_text").css('color', punditColor(pundit));
+			$("h2#result_text").html('"' + json['sentence'] + '" -- ' + punditBot(pundit));
 		}
 	}
 	// sends the response to the server
@@ -132,8 +136,21 @@
 		if(json['sentence'] == undefined) {
 			alert("There was an error processing your request.");
 		} else {
-			$("h3#result_text").html(json['sentence']);
+			// change the text color of the div to correspond to the party of the pundit
+			$("h2#result_text").css('color', punditColor(pundit));
+			$("h2#result_text").html('"' + json['sentence'] + '" -- ' + punditBot(pundit));
 		}
+	}
+
+	// translates a real pundit's name into the bot's name
+	function punditBot(pundit) {
+		if(pundit === "Bloomberg") return "Michael Bloombot";
+		return "Rush Limbot";
+	}
+	// translates a pundit name into the color of their political party
+	function punditColor(pundit) {
+		if(pundit === "Bloomberg") return "blue";
+		return "red";
 	}
     </script>
 
