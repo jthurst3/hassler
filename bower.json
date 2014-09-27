@@ -1,0 +1,6 @@
+{
+	"name": "hassler",
+	"dependencies": {
+		"bootstrap": "~> 3.0"
+	}
+}
