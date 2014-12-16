@@ -1,157 +1,210 @@
 <% provide(:title, 'Automated Punditry') %>
 <% content_for :head do %>
-	<!-- stylesheets and javascripts here -->
-	<%= stylesheet_link_tag "punditry", "data-turbolinks-track" => true %>
+  <!-- stylesheets and javascripts here -->
+  <%= stylesheet_link_tag "punditry", "data-turbolinks-track" => true %>
 <% end %>
 
-	<h1>Automated Punditry</h1>
-	<h2>Making as much sense as the pundits themselves.</h2>
-	<h2 style="color: blue" id="result_text"></h3>
-	<div class="row-fluid">
-    	<div class="col-md-12 center-block">
-    		<section id="game">
-    			<input type="hidden" id="newgame_moves" value="[]">
-    			Text: <input id="newquote_text" placeholder="I think Obama is"><br>
-    			n: <input id="newquote_n" placeholder="3"><br>
-    			Type: <input type="radio" name="newquote_type" value="1">Response &nbsp;
-    			<input type="radio" name="newquote_type" value="2">Complete the Sentence<br>
-    			Pundit: <input type="radio" name="newquote_pundit" value="1">Rush Limbot &nbsp;
-    			<input type="radio" name="newquote_pundit" value="2">Michael Bloombot<br>
-    			<button id="newquote_button" class="btn btn-primary">Generate</button>
-    		</section>
-    		<hr>
-    		<p style="text-align: center">To access the source code, check out the project's <a href="http://github.com/jthurst3/Auto_Pundit">GitHub</a> site.</p>
-    	</div>
+  <h1>Automated Punditry</h1>
+  <h2>Making as much sense as the pundits themselves.</h2>
+  <!-- http://getbootstrap.com/css/#forms -->
+  <!-- Credit for making this more beautiful: Hayden Schiff (haydenschiff.me) -->
+  <div class="row-fluid">
+      <div class="col-md-6 col-md-offset-3">
+        <h2 style="color: blue" id="result_text"></h2>
+        <section id="game" class="form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="newquote_text">Text</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="newquote_text" placeholder="I think Obama is">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="newquote_n">n</label>
+            <div class="col-sm-10">
+              <input type="number" class="form-control" id="newquote_n" placeholder="3">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Type</label>
+            <div class="col-sm-10">
+              <div class="row">
+                <div class="col-sm-6">
+                  <label class="radio-inline">
+                    <input type="radio" name="newquote_type" value="1">Response
+                  </label>
+                </div>
+                <div class="col-sm-6">
+                  <label class="radio-inline">
+                    <input type="radio" name="newquote_type" value="2">Complete the Sentence
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Pundit</label>
+            <div class="col-sm-10">
+              <div class="row">
+                <div class="col-sm-6">
+                  <label class="radio-inline">
+                    <input type="radio" name="newquote_pundit" value="1">Rush Limbot
+                  </label>
+                </div>
+                <div class="col-sm-6">
+                  <label class="radio-inline">
+                    <input type="radio" name="newquote_pundit" value="2">Michael Bloombot
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <button type="submit" class="btn btn-default">Submit</button> -->
+          <!-- <input type="hidden" id="newgame_moves" value="[]">
+          Text: <input id="newquote_text" placeholder="I think Obama is"><br>
+          n: <input id="newquote_n" placeholder="3"><br>
+          Type: <input type="radio" name="newquote_type" value="1">Response &nbsp;
+          <input type="radio" name="newquote_type" value="2">Complete the Sentence<br>
+          Pundit: <input type="radio" name="newquote_pundit" value="1">Rush Limbot &nbsp;
+          <input type="radio" name="newquote_pundit" value="2">Michael Bloombot<br> -->
+          <div class="form-group">
+            <div class="col-md-6 col-md-offset-3">
+              <button id="newquote_button" class="btn btn-primary btn-block">Generate</button>
+            </div>
+          </div>
+        </section>
+        <hr>
+        <p style="text-align: center">To access the source code, check out the project's <a href="http://github.com/jthurst3/Auto_Pundit">GitHub</a> site.</p>
+      </div>
     </div>
     <script type="text/javascript">
     $(document).on('click', "#newquote_button", function() {
-    	return validate_generate();
+      return validate_generate();
     });
 
     // validates the input and generates a quote
     function validate_generate() {
-		var prefix = "newquote_";
-		var text = document.getElementById(prefix + "text").value;
-		var n = document.getElementById(prefix + "n").value;
-		var type = document.getElementsByName(prefix + "type");
-		var pundit = document.getElementsByName(prefix + "pundit");
-		var isValidated = validateInput(text, n, type, pundit);
-		if(isValidated) {
-			// get the n in ngrams
-			var grams = parseInt(n);
-			// get the pundit
-			var pundit;
-			if(pundit[0].checked) {
-				pundit = "Limbaugh";
-			} else {
-				pundit = "Bloomberg";
-			}
-			// get the type  (if the input is validated, one radio button must be checked.)
-			if(type[0].checked) {
-				// it's a response
-				var responsetext = text.split(" ");
-				send_response(grams, pundit, responsetext);
-			} else {
-				// it's a "complete the sentence"
-				var starttext = text.split(" ");
-				send_finish_sentence(grams, pundit, starttext);
-			}
-		}
-	};
-	// validates the input
-	function validateInput(text, n, type, pundit) {
-		// check for blank inputs
-		var values = [text, n, type, pundit];
-		var valueNames = ["text", "the 'n' in n-grams", 
-			"whether the pundit should respond to a sentence or complete the sentence", "the pundit"];
-		for(var i = 0; i < values.length; i++) {
-			if(values[i] == null || values[i] == "") {
-				alert("Game must specify " + valueNames[i]);
-				return false;
-			}
-		}
-		ngrams = parseInt(n);
-		words = text.split(" ");
-		if(ngrams < 1 || ngrams > 3) {
-			alert("n must be between 1 and 3.");
-			return false;
-		}
-		if(!type[0].checked && !type[1].checked) {
-			alert("Please pick whether the pundit should respond to a sentence or complete the sentence.");
-			return false;
-		}
-		if(!pundit[0].checked && !pundit[1].checked) {
-			alert("Please pick the pundit.");
-			return false;
-		}
-		return true;
-	};
+    var prefix = "newquote_";
+    var text = document.getElementById(prefix + "text").value;
+    var n = document.getElementById(prefix + "n").value;
+    var type = document.getElementsByName(prefix + "type");
+    var pundit = document.getElementsByName(prefix + "pundit");
+    var isValidated = validateInput(text, n, type, pundit);
+    if(isValidated) {
+      // get the n in ngrams
+      var grams = parseInt(n);
+      // get the pundit
+      var pundit;
+      if(pundit[0].checked) {
+        pundit = "Limbaugh";
+      } else {
+        pundit = "Bloomberg";
+      }
+      // get the type  (if the input is validated, one radio button must be checked.)
+      if(type[0].checked) {
+        // it's a response
+        var responsetext = text.split(" ");
+        send_response(grams, pundit, responsetext);
+      } else {
+        // it's a "complete the sentence"
+        var starttext = text.split(" ");
+        send_finish_sentence(grams, pundit, starttext);
+      }
+    }
+  };
+  // validates the input
+  function validateInput(text, n, type, pundit) {
+    // check for blank inputs
+    var values = [text, n, type, pundit];
+    var valueNames = ["text", "the 'n' in n-grams", 
+      "whether the pundit should respond to a sentence or complete the sentence", "the pundit"];
+    for(var i = 0; i < values.length; i++) {
+      if(values[i] == null || values[i] == "") {
+        alert("Game must specify " + valueNames[i]);
+        return false;
+      }
+    }
+    ngrams = parseInt(n);
+    words = text.split(" ");
+    if(ngrams < 1 || ngrams > 3) {
+      alert("n must be between 1 and 3.");
+      return false;
+    }
+    if(!type[0].checked && !type[1].checked) {
+      alert("Please pick whether the pundit should respond to a sentence or complete the sentence.");
+      return false;
+    }
+    if(!pundit[0].checked && !pundit[1].checked) {
+      alert("Please pick the pundit.");
+      return false;
+    }
+    return true;
+  };
     
 
-	
+  
 
 
-	// sends the response to the server
-	var send_response = function(grams, pundit, responsetext) {
-		
-		var data = {
-			'grams': grams,
-			'pundit': pundit,
-			'responsetext': responsetext
-		};
-		var xmlHTTP = new XMLHttpRequest();
-		xmlHTTP.open("POST", "http://punditry.herokuapp.com/respond_to_pundit", false);
-		xmlHTTP.setRequestHeader('Content-Type', 'application/json');
-		xmlHTTP.send(JSON.stringify(data));
+  // sends the response to the server
+  var send_response = function(grams, pundit, responsetext) {
+    
+    var data = {
+      'grams': grams,
+      'pundit': pundit,
+      'responsetext': responsetext
+    };
+    var xmlHTTP = new XMLHttpRequest();
+    xmlHTTP.open("POST", "http://punditry.herokuapp.com/respond_to_pundit", false);
+    xmlHTTP.setRequestHeader('Content-Type', 'application/json');
+    xmlHTTP.send(JSON.stringify(data));
 
-		// receive the request and decode it
-		var response = xmlHTTP.responseText;
-		// from http://stackoverflow.com/questions/9036429/convert-object-string-to-json
-		var json = eval('(' + response + ')');
-		if(json['sentence'] == undefined) {
-			alert("There was an error processing your request.");
-		} else {
-			// change the text color of the div to correspond to the party of the pundit
-			$("h2#result_text").css('color', punditColor(pundit));
-			$("h2#result_text").html('"' + json['sentence'] + '" -- ' + punditBot(pundit));
-		}
-	}
-	// sends the response to the server
-	var send_finish_sentence = function(grams, pundit, starttext) {
-		
-		var data = {
-			'grams': grams,
-			'pundit': pundit,
-			'starttext': starttext
-		};
-		var xmlHTTP = new XMLHttpRequest();
-		xmlHTTP.open("POST", "http://punditry.herokuapp.com/finish_sentence", false);
-		xmlHTTP.setRequestHeader('Content-Type', 'application/json');
-		xmlHTTP.send(JSON.stringify(data));
+    // receive the request and decode it
+    var response = xmlHTTP.responseText;
+    // from http://stackoverflow.com/questions/9036429/convert-object-string-to-json
+    var json = eval('(' + response + ')');
+    if(json['sentence'] == undefined) {
+      alert("There was an error processing your request.");
+    } else {
+      // change the text color of the div to correspond to the party of the pundit
+      $("h2#result_text").css('color', punditColor(pundit));
+      $("h2#result_text").html('"' + json['sentence'] + '" -- ' + punditBot(pundit));
+    }
+  }
+  // sends the response to the server
+  var send_finish_sentence = function(grams, pundit, starttext) {
+    
+    var data = {
+      'grams': grams,
+      'pundit': pundit,
+      'starttext': starttext
+    };
+    var xmlHTTP = new XMLHttpRequest();
+    xmlHTTP.open("POST", "http://punditry.herokuapp.com/finish_sentence", false);
+    xmlHTTP.setRequestHeader('Content-Type', 'application/json');
+    xmlHTTP.send(JSON.stringify(data));
 
-		// receive the request and decode it
-		var response = xmlHTTP.responseText;
-		// from http://stackoverflow.com/questions/9036429/convert-object-string-to-json
-		var json = eval('(' + response + ')');
-		if(json['sentence'] == undefined) {
-			alert("There was an error processing your request.");
-		} else {
-			// change the text color of the div to correspond to the party of the pundit
-			$("h2#result_text").css('color', punditColor(pundit));
-			$("h2#result_text").html('"' + json['sentence'] + '" -- ' + punditBot(pundit));
-		}
-	}
+    // receive the request and decode it
+    var response = xmlHTTP.responseText;
+    // from http://stackoverflow.com/questions/9036429/convert-object-string-to-json
+    var json = eval('(' + response + ')');
+    if(json['sentence'] == undefined) {
+      alert("There was an error processing your request.");
+    } else {
+      // change the text color of the div to correspond to the party of the pundit
+      $("h2#result_text").css('color', punditColor(pundit));
+      $("h2#result_text").html('"' + json['sentence'] + '" -- ' + punditBot(pundit));
+    }
+  }
 
-	// translates a real pundit's name into the bot's name
-	function punditBot(pundit) {
-		if(pundit === "Bloomberg") return "Michael Bloombot";
-		return "Rush Limbot";
-	}
-	// translates a pundit name into the color of their political party
-	function punditColor(pundit) {
-		if(pundit === "Bloomberg") return "blue";
-		return "red";
-	}
+  // translates a real pundit's name into the bot's name
+  function punditBot(pundit) {
+    if(pundit === "Bloomberg") return "Michael Bloombot";
+    return "Rush Limbot";
+  }
+  // translates a pundit name into the color of their political party
+  function punditColor(pundit) {
+    if(pundit === "Bloomberg") return "blue";
+    return "red";
+  }
     </script>
 
 
