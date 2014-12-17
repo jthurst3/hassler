@@ -41,15 +41,22 @@
     		      </div>
     		    </div>
     		  </div>
-    		  <div class="form-group">
-    		    <div class="col-md-6 col-md-offset-3">
-    		      <button id="newgame_button" class="btn btn-primary btn-block">New game</button>
-    		    </div>
-    		  </div>
     		</section>
+			<input type="hidden" id="newgame_moves" value="[]">
     		<section id="game">
-    			<input type="hidden" id="newgame_moves" value="[]">
     		</section>
+		    <div class="form-group" id="newgame_div">
+		      <div class="col-md-6 col-md-offset-3">
+		        <button id="newgame_button" class="btn btn-primary btn-block">New game</button>
+		      </div>
+		    </div>
+		    <!-- what a hack -->
+		    <br>
+		    <div class="form-group" id="restartgame_div" style="display: none">
+		      <div class="col-md-6 col-md-offset-3">
+		        <button id="restart_button" class="btn btn-primary btn-block">Start new game</button>
+		      </div>
+		    </div>
     	</div>
     	<div class="col-md-6 col-md-offset-3">
     		<hr>

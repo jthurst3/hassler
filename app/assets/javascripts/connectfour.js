@@ -19,7 +19,7 @@ function create_game(columns, rows, turn) {
 	var body_footer = "</tbody>";
 	var row_header = "<tr>";
 	var row_footer = "</tr>";
-	var restart_html = "<button id=\"restart_button\" class=\"btn btn-primary\">Start new game</button>";
+	// var restart_html = "<button id=\"restart_button\" class=\"btn btn-primary\">Start new game</button>";
 	// table headers
 	var header_element = function(column) {
 		return "<th data-col=\"" + column + "\" class=\"table_header\" id=\"" + column + "\">&darr;</th>";
@@ -45,7 +45,13 @@ function create_game(columns, rows, turn) {
 		board_string += row;
 	}
 	board_string += board_footer;
-	board_string += restart_html;
+	// board_string += restart_html;
+
+	// hide the start div and show the game div
+	$("section#game_start").hide();
+	$("section#game").show();
+	$("div#newgame_div").hide();
+	$("div#restartgame_div").show();
 	var txt = $("section#game").html(board_string);
 
 	// initialize the global variables
@@ -183,9 +189,11 @@ var get_winning_message = function(player) {
 // sets up the board for a new game
 var start_game = function() {
 	// taken from the top of the page
-	var html_string = "<input type=\"hidden\" id=\"newgame_moves\" value=\"[]\">Columns: <input id=\"newgame_columns\" placeholder=\"7\"><br>Rows: <input id=\"newgame_rows\" placeholder=\"6\"><br>Turn: <input type=\"radio\" name=\"newgame_turn\" value=\"1\">First &nbsp;<input type=\"radio\" name=\"newgame_turn\" value=\"2\">Second<br><button id=\"newgame_button\" class=\"btn btn-primary\">New game</button>";
-	// hide the start div and show the game div
-	$("section#game").show();
-	$("section#game_start").hide();
-	$("section#game").html(html_string);
+	// var html_string = "<input type=\"hidden\" id=\"newgame_moves\" value=\"[]\">Columns: <input id=\"newgame_columns\" placeholder=\"7\"><br>Rows: <input id=\"newgame_rows\" placeholder=\"6\"><br>Turn: <input type=\"radio\" name=\"newgame_turn\" value=\"1\">First &nbsp;<input type=\"radio\" name=\"newgame_turn\" value=\"2\">Second<br><button id=\"newgame_button\" class=\"btn btn-primary\">New game</button>";
+	// hide the game div and show the start div
+	$("section#game").hide();
+	$("section#game_start").show();
+	$("div#restartgame_div").hide();
+	$("div#newgame_div").show();
+	// $("section#game").html(html_string);
 }
