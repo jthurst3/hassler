@@ -184,5 +184,8 @@ var get_winning_message = function(player) {
 var start_game = function() {
 	// taken from the top of the page
 	var html_string = "<input type=\"hidden\" id=\"newgame_moves\" value=\"[]\">Columns: <input id=\"newgame_columns\" placeholder=\"7\"><br>Rows: <input id=\"newgame_rows\" placeholder=\"6\"><br>Turn: <input type=\"radio\" name=\"newgame_turn\" value=\"1\">First &nbsp;<input type=\"radio\" name=\"newgame_turn\" value=\"2\">Second<br><button id=\"newgame_button\" class=\"btn btn-primary\">New game</button>";
+	// hide the start div and show the game div
+	$("section#game").show();
+	$("section#game_start").hide();
 	$("section#game").html(html_string);
 }
