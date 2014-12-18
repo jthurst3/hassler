@@ -24,13 +24,7 @@ html {
 
 body {
   padding-top: 60px;
-}
-
-body > .row {
-  padding-left: 15px;
-  padding-right: 15px;
-  margin-left: auto;
-  margin-right: auto;
+  // overflow-x: hidden;
 }
 
 section {
@@ -42,7 +36,10 @@ textarea {
 }
 
 .padded {
-  padding: 0 15px;
+  // padding-left: 15px;
+  // padding-right: 15px;
+  // margin-left: 0;
+  // margin-right: 0;
 }
 
 .center {
