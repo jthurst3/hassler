@@ -1,6 +1,13 @@
 <% provide(:title, 'Human-Aided Computer Composition') %>
 <% content_for :head do %>
 	<%= stylesheet_link_tag "hacc", "data-turbolinks-track" => true %>
+    <%= javascript_include_tag "midijs/js/MIDI/AudioDetect.js", "data-turbolinks-track" => true %>
+    <%= javascript_include_tag "midijs/js/MIDI/LoadPlugin.js", "data-turbolinks-track" => true %>
+    <%= javascript_include_tag "midijs/js/MIDI/Plugin.js", "data-turbolinks-track" => true %>
+    <%= javascript_include_tag "midijs/js/MIDI/Player.js", "data-turbolinks-track" => true %>
+    <%= javascript_include_tag "midijs/js/Window/DOMLoader.script.js", "data-turbolinks-track" => true %>
+    <%= javascript_include_tag "midijs/inc/Base64.js", "data-turbolinks-track" => true %>
+    <%= javascript_include_tag "midijs/inc/base64binary.js", "data-turbolinks-track" => true %>
 <% end %>
 
 	<h1>Human-Aided Computer Composition</h1>
@@ -15,3 +22,56 @@
         		<p style="text-align: center">To access the source code, check out the project's <a href="http://github.com/jthurst3/computermusic">GitHub</a> site.</p>
             </div>
     </div>
+
+    <script type="text/javascript">
+    // template is modified from the MIDI.js library (https://github.com/mudcube/MIDI.js)
+    window.onload = function () {
+        MIDI.loadPlugin({
+            soundfontUrl: "/assets/midijs/soundfont/",
+            instrument: "acoustic_grand_piano",
+            callback: function() {
+                var delay = 0; // play one note every quarter second
+                var note = 50; // the MIDI note
+                var velocity = 127; // how hard the note hits
+                // set the volume
+                MIDI.setVolume(0, 127);
+                // translate and play the fiddle tune
+                var tune = createFiddleTune();
+                translateFiddleTune(tune, 120);
+                // MIDI.noteOn(0, note, velocity, delay);
+                // MIDI.noteOff(0, note, delay + 0.75);
+            }
+        });
+    };
+
+    // code for translating a sequence of notes for the fiddle tune into stuff that is played back
+    var translateFiddleTune = function(tune, tempo) {
+        for (var note = 0; note < tune.length; note++) {
+            // console.log("start and end times for " + tune[note] + ": " + (0.75*note) + " and " + (0.75*(note+1)));
+            MIDI.noteOn(0, tune[note][0] + 60, 127, (60/tempo)*tune[note][1][0]);
+            MIDI.noteOff(0, tune[note][0] + 60, (60/tempo)*tune[note][1][1]);
+        };
+    }
+
+    // code for creating a fiddle tune
+    var createFiddleTune = function() {
+        var notes = [0,-1,0,2,4,5,7];
+        var rhythms = [];
+        for (var note = 0; note < notes.length; note++) {
+            rhythms.push([note, note+1]);
+        };
+        var tuneTransposed = [notes, rhythms];
+        // from http://stackoverflow.com/questions/17428587/transposing-a-2d-array-in-javascript
+        var tune = tuneTransposed[0].map(function(col, i) { 
+          return tuneTransposed.map(function(row) { 
+            return row[i];
+          })
+        });
+        return tune;
+    };
+
+    var possibleRhythms = [[[0, 1]], [[0, 0.5], [0.5, 0.75], [0.75, 1]], [[0, 
+     0.25], [0.25, 0.5], [0.5, 0.625], [0.625, 0.75], [0.75, 1]], [[0,
+      0.25], [0.25, 0.5], [0.5, 0.75], [0.75, 1]], [[0, 0.5], [0.5, 
+     1]], [[0, 0.25], [0.25, 0.5], [0.5, 1]]];
+    </script>
