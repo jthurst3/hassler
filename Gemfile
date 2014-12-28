@@ -27,6 +27,8 @@ gem 'jbuilder', '1.0.2'
 gem 'rack-rewrite'
 gem 'font-awesome-rails'
 gem 'font-awesome-less'
+gem 'less-rails'
+gem 'therubyracer'
 
 group :doc do
   gem 'sdoc', '0.3.20', require: false
