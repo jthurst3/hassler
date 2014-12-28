@@ -12,11 +12,12 @@
     <%= javascript_include_tag "computermusic/js/fiddletune.js", "data-turbolinks-track" => true %>
 <% end %>
 
-	<h1>Human-Aided Computer Composition</h1>
+	<h1>HACC</h1>
+    <h2>Human-Aided Computer Composition</h2>
 	<div class="row-fluid">
 		<section id="music">
             <div class="col-md-6 col-md-offset-3 center">
-    			<button class="button" onclick="random_fiddle_tune()">Generate Fiddle Tune</button>
+    			<button class="btn btn-primary" onclick="random_fiddle_tune()">Generate Fiddle Tune</button>
             </div>
 		</section>
             <div class="col-md-6 col-md-offset-3">
@@ -37,14 +38,12 @@
                 var velocity = 127; // how hard the note hits
                 // set the volume
                 MIDI.setVolume(0, 127);
-                // random_fiddle_tune();
-                // translate and play the fiddle tune
-                // var tune = fiddletune(0);
-                // translateFiddleTune(tune, 75);
-                // MIDI.noteOn(0, note, velocity, delay);
-                // MIDI.noteOff(0, note, delay + 0.75);
             }
         });
+        // start counting how much time elapsed since page load, since 
+        // we need to offset MIDI playback start and end times by the time since page load
+        // http://www.webdeveloper.com/forum/showthread.php?3153-How-much-time-has-elapsed-Since-loading-this-web-page
+        var startTime = new Date().getTime();
     };
 
     // function for generating a random fiddle tune in a random key
@@ -59,10 +58,12 @@
 
     // code for translating a sequence of notes for the fiddle tune into stuff that is played back
     var translateFiddleTune = function(tune, tempo) {
+        // we need to know how much time has elapsed since page load
+        var offset = Math.floor((new Date().getTime() - startTime)/1000) + 1;
         for (var note = 0; note < tune[0].length; note++) {
             // console.log("start and end times for " + tune[0][note] + ": " + (0.75*note) + " and " + (0.75*(note+1)));
-            MIDI.noteOn(0, tune[0][note] + 60, 127, (60/tempo)*tune[1][note][0]);
-            MIDI.noteOff(0, tune[0][note] + 60, (60/tempo)*tune[1][note][1]);
+            MIDI.noteOn(0, tune[0][note] + 60, 127, (60/tempo)*tune[1][note][0] + offset);
+            MIDI.noteOff(0, tune[0][note] + 60, (60/tempo)*tune[1][note][1] + offset);
         };
     }
 
