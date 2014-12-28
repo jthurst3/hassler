@@ -1,1 +1,7 @@
 
+[submodule "vendor/submodules/automata"]
+	path = vendor/submodules/automata
+	url = git@github.com:jthurst3/automata.git
+[submodule "vendor/submodules/computermusic"]
+	path = vendor/submodules/computermusic
+	url = git@github.com:jthurst3/computermusic.git

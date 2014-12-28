@@ -8,13 +8,14 @@
     <%= javascript_include_tag "midijs/js/Window/DOMLoader.script.js", "data-turbolinks-track" => true %>
     <%= javascript_include_tag "midijs/inc/Base64.js", "data-turbolinks-track" => true %>
     <%= javascript_include_tag "midijs/inc/base64binary.js", "data-turbolinks-track" => true %>
+    <%= javascript_include_tag "computermusic/js/fiddletune.js", "data-turbolinks-track" => true %>
 <% end %>
 
 	<h1>Human-Aided Computer Composition</h1>
 	<div class="row-fluid">
 		<section id="music">
             <div class="col-md-6 col-md-offset-3 center">
-    			No content here yet.
+    			<button class="button" onclick="random_fiddle_tune()">Generate Fiddle Tune</button>
             </div>
 		</section>
             <div class="col-md-6 col-md-offset-3">
@@ -35,40 +36,34 @@
                 var velocity = 127; // how hard the note hits
                 // set the volume
                 MIDI.setVolume(0, 127);
+                // random_fiddle_tune();
                 // translate and play the fiddle tune
-                var tune = createFiddleTune();
-                translateFiddleTune(tune, 120);
+                // var tune = fiddletune(0);
+                // translateFiddleTune(tune, 75);
                 // MIDI.noteOn(0, note, velocity, delay);
                 // MIDI.noteOff(0, note, delay + 0.75);
             }
         });
     };
 
+    // function for generating a random fiddle tune in a random key
+    var random_fiddle_tune = function() {
+        // pick a key randomly
+        var key = Math.floor(Math.random()*12);
+        // generate the tune
+        var tune = fiddletune(key);
+        // play the tune at 75 beats per minute
+        translateFiddleTune(tune, 75);
+    };
+
     // code for translating a sequence of notes for the fiddle tune into stuff that is played back
     var translateFiddleTune = function(tune, tempo) {
-        for (var note = 0; note < tune.length; note++) {
-            // console.log("start and end times for " + tune[note] + ": " + (0.75*note) + " and " + (0.75*(note+1)));
-            MIDI.noteOn(0, tune[note][0] + 60, 127, (60/tempo)*tune[note][1][0]);
-            MIDI.noteOff(0, tune[note][0] + 60, (60/tempo)*tune[note][1][1]);
+        for (var note = 0; note < tune[0].length; note++) {
+            // console.log("start and end times for " + tune[0][note] + ": " + (0.75*note) + " and " + (0.75*(note+1)));
+            MIDI.noteOn(0, tune[0][note] + 60, 127, (60/tempo)*tune[1][note][0]);
+            MIDI.noteOff(0, tune[0][note] + 60, (60/tempo)*tune[1][note][1]);
         };
     }
-
-    // code for creating a fiddle tune
-    var createFiddleTune = function() {
-        var notes = [0,-1,0,2,4,5,7];
-        var rhythms = [];
-        for (var note = 0; note < notes.length; note++) {
-            rhythms.push([note, note+1]);
-        };
-        var tuneTransposed = [notes, rhythms];
-        // from http://stackoverflow.com/questions/17428587/transposing-a-2d-array-in-javascript
-        var tune = tuneTransposed[0].map(function(col, i) { 
-          return tuneTransposed.map(function(row) { 
-            return row[i];
-          })
-        });
-        return tune;
-    };
 
     var possibleRhythms = [[[0, 1]], [[0, 0.5], [0.5, 0.75], [0.75, 1]], [[0, 
      0.25], [0.25, 0.5], [0.5, 0.625], [0.625, 0.75], [0.75, 1]], [[0,

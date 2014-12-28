@@ -27,6 +27,8 @@ module Hassler
 
     # bower
     config.assets.paths << Rails.root.join('vendor', 'assets', 'components')
+    # submodules
+    config.assets.paths << Rails.root.join('vendor', 'submodules')
 
     # asset pipeline compatibility
     config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
