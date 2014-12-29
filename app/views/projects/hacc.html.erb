@@ -15,9 +15,121 @@
 	<h1>HACC</h1>
     <h2>Human-Aided Computer Composition</h2>
 	<div class="row-fluid">
+        <section id="about">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <!-- http://getbootstrap.com/javascript/#collapse-example-accordion -->
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                      <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                          <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#whatsthis" aria-expanded="false" aria-controls="whatsthis">
+                              What's This?
+                            </a>
+                          </h4>
+                        </div>
+                        <div id="whatsthis" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                          <div class="panel-body">
+                            Human-Aided Computer Composition (HACC) was an exploratory project I started in 2010 to see whether computers could compose music effectively. Over the course of 21 months, the programs I wrote (in <a href="http://www.wolfram.com/mathematica/">Mathematica</a>) were able to produce sixty-second violin duets, string quartets, and fiddle tunes. Below is the result of rewriting my fiddle tune code in Javascript. Select a key by clicking on the appropriate radio button, click "Generate Fiddle Tune", and (thanks in part to the <a href="http://mudcu.be/midi-js/">Midi.js</a> library) my program will start playing a newly-composed Irish reel.
+                            <br><br>
+                            I plan to port my violin duet and string quartet code to Javascript soon. Until then, have fun making reels!
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 		<section id="music">
-            <div class="col-md-6 col-md-offset-3 center">
-    			<button class="btn btn-primary" onclick="random_fiddle_tune()">Generate Fiddle Tune</button>
+            <div class="col-md-6 col-md-offset-3">
+                <div class="form-group">
+                  <div class="col-sm-2 col-sm-offset-5 center">
+                    <label class="control-label">Key</label>
+                  </div>
+                  <br>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <label class="radio-inline">
+                          <input type="radio" name="key_choice" value="0">C Major
+                        </label>
+                      </div>
+                      <div class="col-sm-4">
+                        <label class="radio-inline">
+                          <input type="radio" name="key_choice" value="1">C# Major
+                        </label>
+                      </div>
+                      <div class="col-sm-4">
+                        <label class="radio-inline">
+                          <input type="radio" name="key_choice" value="2">D Major
+                        </label>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <label class="radio-inline">
+                          <input type="radio" name="key_choice" value="3">D# Major
+                        </label>
+                      </div>
+                      <div class="col-sm-4">
+                        <label class="radio-inline">
+                          <input type="radio" name="key_choice" value="4">E Major
+                        </label>
+                      </div>
+                      <div class="col-sm-4">
+                        <label class="radio-inline">
+                          <input type="radio" name="key_choice" value="5">F Major
+                        </label>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <label class="radio-inline">
+                          <input type="radio" name="key_choice" value="6">F# Major
+                        </label>
+                      </div>
+                      <div class="col-sm-4">
+                        <label class="radio-inline">
+                          <input type="radio" name="key_choice" value="7">G Major
+                        </label>
+                      </div>
+                      <div class="col-sm-4">
+                        <label class="radio-inline">
+                          <input type="radio" name="key_choice" value="8">G# Major
+                        </label>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <label class="radio-inline">
+                          <input type="radio" name="key_choice" value="9">A Major
+                        </label>
+                      </div>
+                      <div class="col-sm-4">
+                        <label class="radio-inline">
+                          <input type="radio" name="key_choice" value="10">A# Major
+                        </label>
+                      </div>
+                      <div class="col-sm-4">
+                        <label class="radio-inline">
+                          <input type="radio" name="key_choice" value="11">B Major
+                        </label>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-4 col-sm-offset-4">
+                        <label class="radio-inline">
+                          <input type="radio" name="key_choice" value="-1" checked>Random
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-md-offset-3 center">
+                  <br>
+    			  <button class="btn btn-primary" onclick="random_fiddle_tune()">Generate Fiddle Tune</button>
+                </div>
+                <!-- <button class="btn btn-primary" onclick="MIDI.Player.pause()">Pause</button> -->
             </div>
 		</section>
             <div class="col-md-6 col-md-offset-3">
@@ -49,8 +161,13 @@
 
     // function for generating a random fiddle tune in a random key
     var random_fiddle_tune = function() {
-        // pick a key randomly
-        var key = Math.floor(Math.random()*12);
+        // determine the key of the fiddle tune
+        // http://stackoverflow.com/questions/15839169/how-to-get-value-of-selected-radio-button
+        var key = $("input[name=key_choice]:checked").val();
+        // pick a random key if they checked the random button
+        if (key === -1) {
+            key = Math.floor(Math.random() * 12);
+        };
         // generate the tune
         var tune = fiddletune(key);
         // play the tune at 75 beats per minute
@@ -65,11 +182,6 @@
             // console.log("start and end times for " + tune[0][note] + ": " + (0.75*note) + " and " + (0.75*(note+1)));
             MIDI.noteOn(0, tune[0][note] + 60, 127, (60/tempo)*tune[1][note][0] + offset);
             MIDI.noteOff(0, tune[0][note] + 60, (60/tempo)*tune[1][note][1] + offset);
-        };
-    }
-
-    var possibleRhythms = [[[0, 1]], [[0, 0.5], [0.5, 0.75], [0.75, 1]], [[0, 
-     0.25], [0.25, 0.5], [0.5, 0.625], [0.625, 0.75], [0.75, 1]], [[0,
-      0.25], [0.25, 0.5], [0.5, 0.75], [0.75, 1]], [[0, 0.5], [0.5, 
-     1]], [[0, 0.25], [0.25, 0.5], [0.5, 1]]];
+        }
+    };
     </script>
