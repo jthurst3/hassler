@@ -27,6 +27,7 @@
     </div>
 
     <script type="text/javascript">
+    var startTime;
     // template is modified from the MIDI.js library (https://github.com/mudcube/MIDI.js)
     window.onload = function () {
         MIDI.loadPlugin({
@@ -43,7 +44,7 @@
         // start counting how much time elapsed since page load, since 
         // we need to offset MIDI playback start and end times by the time since page load
         // http://www.webdeveloper.com/forum/showthread.php?3153-How-much-time-has-elapsed-Since-loading-this-web-page
-        var startTime = new Date().getTime();
+        startTime = new Date().getTime();
     };
 
     // function for generating a random fiddle tune in a random key
