@@ -16,7 +16,7 @@ group :test do
   gem 'capybara', '2.1.0'
 end
 
-gem 'sass-rails', '4.0.1'
+gem 'sass-rails', '~> 4.0.3'
 gem 'bootstrap-sass', '~> 3.3.1.0'
 gem 'autoprefixer-rails'
 gem 'uglifier', '2.1.1'
@@ -29,6 +29,7 @@ gem 'font-awesome-rails'
 gem 'font-awesome-less'
 gem 'less-rails'
 gem 'therubyracer'
+gem 'nokogiri', '1.3.3'
 
 group :doc do
   gem 'sdoc', '0.3.20', require: false
